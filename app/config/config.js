@@ -12,5 +12,6 @@ module.exports ={
     DB_PASSWORD,
     DB_NAME,
     DB_PORT,
-    PORT
+    PORT,
+    DB_USER
 }
