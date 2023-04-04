@@ -1,6 +1,8 @@
+const db = require("./config");
+
 module.exports = {
-  HOST: "localhost",
-  USER: "devuser",
-  PASSWORD: "Praveen@6470",
-  DB: "ecommerace"
+  HOST: db.DB_HOST,
+  USER: db.DB_USER,
+  PASSWORD: db.DB_PASSWORD,
+  DB: db.DB_NAME
 };
