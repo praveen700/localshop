@@ -1,14 +1,14 @@
 const Customers = require("../models/customers.model.js");
 
-const cust = new Customers({
-  name: req.body.name,
-  email: req.body.email,
-  phone: req.body.phone,
-  shipping_address:req.body.shipping_address,
-  billing_address: req.body.billing_address
-});
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
+  const cust = new Customers({
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    shipping_address:req.body.shipping_address,
+    billing_address: req.body.billing_address
+  });
   if (!req.body) {
     res.status(405).send({
       message: "Content can not be empty!"
