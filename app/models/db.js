@@ -6,6 +6,7 @@ var connection = mysql.createPool({
   user: db.DB_USER,
   password: db.DB_PASSWORD,
   database: db.DB_NAME,
+  port: db.DB_PORT,
   connectTimeout: 10000 
 });
 
