@@ -1,5 +1,5 @@
-const sql = require("./db.js");
-
+const sql = require("../models/db");
+const custQuery = require("../Querys/customer.query");
 // constructor
 const Customers = function(cust) {
   this.name= cust.name,
@@ -19,6 +19,21 @@ Customers.create = (newTutorial, result) => {
     result(null, { id: res.insertId, ...newTutorial });
   });
 };
+
+// Customers.getAll = (result) => {
+//   sql.query("SELECT * FROM Customers", (err, res) => {
+//     if (err) {
+//       result(err, null);
+//       return;
+//     }
+//     if(res?.length){
+//       result(null, res);
+//       return;
+//     }
+//     result(null, { data: res });
+//   });
+  
+// };
 
 // Tutorial.findById = (id, result) => {
 //   sql.query(`SELECT * FROM tutorials WHERE id = ${id}`, (err, res) => {
