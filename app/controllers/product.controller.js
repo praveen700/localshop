@@ -18,6 +18,37 @@ module.exports = {
             }
         })
     },
+    createProduct: async(req, res, next) => {
+        await sql.query(qu.insertProducts(req.body), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            }else{
+                res.status(200).json({ status: true, data: "Product Created Successfully" })
+            }
+        })
+
+    },
+    // need work on update still
+    updateProducts: async(req, res, next) => {
+        await sql.query(qu.updateProducts(req.body, req.params.id), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            }else{
+                res.status(200).json({ status: true, data: "Product Created Successfully" })
+            }
+        })
+
+    },
+    fetchCateogeryWise: async(req, res, next)=>{
+        let query = await qu.fetchProductsBasedOnCategory(req.query.categoryType)
+        await sql.query(query, (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            }else{
+                res.status(200).json({ status: true, data: data })
+            }
+        })
+    }
 };
 
 

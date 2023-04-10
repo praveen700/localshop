@@ -1,4 +1,4 @@
-const fetchQuery = (params="", page = 1, pageSize = 3) => {
+const fetchQuery = (params = "", page = 1, pageSize = 3) => {
     if (!params && !page && !pageSize) {
         return `SELECT * FROM Products`;
     } else if (page && pageSize && !params) {
@@ -16,19 +16,46 @@ const fetchQuery = (params="", page = 1, pageSize = 3) => {
 };
 
 const searchCount = (params) => {
-    if(params){
+    if (params) {
         return {
             sql: `SELECT COUNT(*) AS total_count FROM Products WHERE CONCAT_WS(',', product_id, name, description, price, image_url) LIKE ?`,
             values: [`%${params}%`],
         }
-    }else{
-        return{
+    } else {
+        return {
             sql: `SELECT COUNT(*) AS total_count FROM Products`
         }
     }
 }
+
+const insertProducts = (body) => {
+    return {
+        sql: `INSERT INTO Products SET ?`,
+        values: body,
+    }
+}
+
+const fetchProductsBasedOnCategory = (params) => {
+    return{
+        sql:`SELECT Products.product_id, Products.name, Products.price, Products.description, 
+        Products.image_url, Categories.name AS category_name
+        FROM Products
+        INNER JOIN Categories ON Products.category_id = Categories.category_id
+        WHERE Categories.name LIKE ?`,
+        values: [`%${params}%`],
+    }
+}
+const updateProducts = (body, id) => {
+    return {
+        sql: `UPDATE INTO Products SET ? where product_id = ?`,
+        values: [id,body],
+    }
+}
 module.exports = {
     fetchQuery,
-    searchCount
+    searchCount,
+    insertProducts,
+    fetchProductsBasedOnCategory,
+    updateProducts
 }
 
