@@ -3,6 +3,7 @@ module.exports = app => {
     const product = require("../controllers/product.controller");
     router.get("/", product.fetchProduct);
     router.put("/:id", product.updateProducts);
+    router.delete("/:id", product.delteProductByID);
     router.get("/category", product.fetchCateogeryWise);
     router.post("/category/:id", product.createProduct);
     app.use('/api/products', router);

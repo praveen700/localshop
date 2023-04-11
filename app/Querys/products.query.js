@@ -45,17 +45,26 @@ const fetchProductsBasedOnCategory = (params) => {
         values: [`%${params}%`],
     }
 }
-const updateProducts = (body, id) => {
+const updateProducts = (body, product_id) => {
     return {
-        sql: `UPDATE INTO Products SET ? where product_id = ?`,
-        values: [id,body],
+        sql: 'UPDATE Products SET ? WHERE product_id = ?',
+        values: [body,product_id],
     }
 }
+
+const deleteProducts =(product_id) => {
+    return {
+        sql: 'DELETE FROM Products WHERE product_id = ?',
+        values: [product_id],
+    }
+}
+
 module.exports = {
     fetchQuery,
     searchCount,
     insertProducts,
     fetchProductsBasedOnCategory,
-    updateProducts
+    updateProducts,
+    deleteProducts
 }
 

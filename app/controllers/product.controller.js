@@ -28,13 +28,13 @@ module.exports = {
         })
 
     },
-    // need work on update still
     updateProducts: async(req, res, next) => {
+        console.log(req.body, "req.params.id");
         await sql.query(qu.updateProducts(req.body, req.params.id), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
-                res.status(200).json({ status: true, data: "Product Created Successfully" })
+                res.status(200).json({ status: true, data: "Product Updated Successfully" })
             }
         })
 
@@ -48,7 +48,17 @@ module.exports = {
                 res.status(200).json({ status: true, data: data })
             }
         })
-    }
+    },
+    delteProductByID: async(req, res, next) => {
+        await sql.query(qu.deleteProducts(req.params.id), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            }else{
+                res.status(200).json({ status: true, data: "Product Deleted Successfully" })
+            }
+        })
+
+    },
 };
 
 
