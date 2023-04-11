@@ -1,5 +1,5 @@
 {
-  "name": "Local Shop",
+  "name": "local-shop",
   "version": "1.0.0",
   "description": "local shop",
   "main": "server.js",
