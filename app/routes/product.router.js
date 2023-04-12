@@ -6,5 +6,6 @@ module.exports = app => {
     router.delete("/:id", product.delteProductByID);
     router.post("/category/:id", product.createProduct);
     router.get("/category", product.fetchCateogeryWise);
+    router.get("/all-category-all-products", product.landingPage);
     app.use('/api/products', router);
   };

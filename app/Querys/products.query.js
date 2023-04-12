@@ -59,12 +59,18 @@ const deleteProducts =(product_id) => {
     }
 }
 
+const homePageQuery = `select * from Products p join Categories c on p.category_id = c.category_id LIMIT 50`
+
 module.exports = {
     fetchQuery,
     searchCount,
     insertProducts,
     fetchProductsBasedOnCategory,
     updateProducts,
-    deleteProducts
+    deleteProducts,
+    homePageQuery
 }
+// https://www.shutterstock.com/image-vector/super-sale-header-banner-design-260nw-1663164736.jpg
+// https://www.pngitem.com/pimgs/m/591-5918916_image-description-electronics-banner-images-hd-hd-png.png
+// https://i.pinimg.com/originals/9a/13/dc/9a13dc79ca4368d6c87acb2e52cadf9d.jpg
 

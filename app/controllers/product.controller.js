@@ -1,5 +1,7 @@
+const { bannerUrl } = require("../../constants/constants");
 const sql = require("../models/db");
 const qu = require("../Querys/products.query");
+const { groupBy } = require("../utils/helper");
 module.exports = {
     fetchProduct: async (req, res, next) => {
         await sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
@@ -59,6 +61,20 @@ module.exports = {
         })
 
     },
+    landingPage: async(req, res, next)=>{
+        await sql.query(qu.homePageQuery, (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            }else{
+                let groupedObject = groupBy(data, "name")
+                let payloadSend = {
+                    ...groupedObject,
+                    bannerImages: bannerUrl
+                }
+                res.status(200).json({ status: true, data: payloadSend })
+            }
+        })
+    }
 };
 
 
