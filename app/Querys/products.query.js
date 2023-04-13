@@ -59,7 +59,27 @@ const deleteProducts =(product_id) => {
     }
 }
 
-const homePageQuery = `select * from Products p join Categories c on p.category_id = c.category_id LIMIT 50`
+const homePageQuery = (params) => {
+    if(!params){
+        return{
+            sql:`select p.product_id, p.name, p.description, p.price, p.image_url, c.name as productName from Products p join Categories c on p.category_id = c.category_id LIMIT 50`
+        }
+    }else{
+        return{
+            sql:`SELECT *
+            FROM (
+              SELECT p.product_id, p.name, p.description, p.price, p.image_url, c.category_id AS category_id2, c.name as productName
+              FROM Products p
+              JOIN Categories c ON p.category_id = c.category_id
+              LIMIT 50
+            ) AS subquery
+            WHERE CONCAT_WS(',', product_id, name, description, price, image_url) LIKE ?
+            `,
+            values: [`%${params}%`],
+        }
+
+    }
+}
 
 module.exports = {
     fetchQuery,
@@ -70,7 +90,5 @@ module.exports = {
     deleteProducts,
     homePageQuery
 }
-// https://www.shutterstock.com/image-vector/super-sale-header-banner-design-260nw-1663164736.jpg
-// https://www.pngitem.com/pimgs/m/591-5918916_image-description-electronics-banner-images-hd-hd-png.png
-// https://i.pinimg.com/originals/9a/13/dc/9a13dc79ca4368d6c87acb2e52cadf9d.jpg
+
 

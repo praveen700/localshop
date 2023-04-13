@@ -62,11 +62,11 @@ module.exports = {
 
     },
     landingPage: async(req, res, next)=>{
-        await sql.query(qu.homePageQuery, (err, data) => {
+        await sql.query(qu.homePageQuery(req.query.search), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
-                let groupedObject = groupBy(data, "name")
+                let groupedObject = groupBy(data, "productName")
                 let payloadSend = {
                     ...groupedObject,
                     bannerImages: bannerUrl
