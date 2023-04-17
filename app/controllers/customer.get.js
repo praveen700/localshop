@@ -1,8 +1,8 @@
 const sql = require("../models/db");
 const qu = require("../Querys/customer.query");
 module.exports = {
-    fetchCustomer: async (req, res, next) => {
-        await sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
+    fetchCustomer:  (req, res, next) => {
+         sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             } else {

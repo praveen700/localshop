@@ -3,8 +3,8 @@ const sql = require("../models/db");
 const qu = require("../Querys/products.query");
 const { groupBy } = require("../utils/helper");
 module.exports = {
-    fetchProduct: async (req, res, next) => {
-        await sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
+    fetchProduct:  (req, res, next) => {
+         sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             } else {
@@ -20,8 +20,8 @@ module.exports = {
             }
         })
     },
-    createProduct: async(req, res, next) => {
-        await sql.query(qu.insertProducts(req.body), (err, data) => {
+    createProduct: (req, res, next) => {
+         sql.query(qu.insertProducts(req.body), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
@@ -30,9 +30,8 @@ module.exports = {
         })
 
     },
-    updateProducts: async(req, res, next) => {
-        console.log(req.body, "req.params.id");
-        await sql.query(qu.updateProducts(req.body, req.params.id), (err, data) => {
+    updateProducts: (req, res, next) => {
+         sql.query(qu.updateProducts(req.body, req.params.id), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
@@ -41,9 +40,9 @@ module.exports = {
         })
 
     },
-    fetchCateogeryWise: async(req, res, next)=>{
-        let query = await qu.fetchProductsBasedOnCategory(req.query.categoryType)
-        await sql.query(query, (err, data) => {
+    fetchCateogeryWise: (req, res, next)=>{
+        let query =  qu.fetchProductsBasedOnCategory(req.query.categoryType)
+         sql.query(query, (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
@@ -51,8 +50,8 @@ module.exports = {
             }
         })
     },
-    delteProductByID: async(req, res, next) => {
-        await sql.query(qu.deleteProducts(req.params.id), (err, data) => {
+    delteProductByID: (req, res, next) => {
+         sql.query(qu.deleteProducts(req.params.id), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
@@ -61,8 +60,8 @@ module.exports = {
         })
 
     },
-    landingPage: async(req, res, next)=>{
-        await sql.query(qu.homePageQuery(req.query.search), (err, data) => {
+    landingPage: (req, res, next)=>{
+         sql.query(qu.homePageQuery(req.query.search), (err, data) => {
             if (err) {
                 res.status(403).json({ error: err.message });
             }else{
