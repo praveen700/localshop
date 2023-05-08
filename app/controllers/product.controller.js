@@ -70,11 +70,30 @@ module.exports = {
                     ...groupedObject,
                     bannerImages: bannerUrl
                 }
-                res.status(200).json({ status: true, data: payloadSend })
+                res.status(200).json({ status: true, data: payloadSend, })
             }
         })
-    }
+    },
+    sortPorducts :  (req, res, next) => {
+        sql.query(qu.sortProducts(req.params.categoryId, req.query.sortType), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                res.status(200).json({ status: true, data: data })
+            }
+        })
+    },
+    filterProductsByPrice :(req, res, next) => {
+        sql.query(qu.priceSliderQuery(req.params.categoryId, req.query.minPrice, req.query.maxPrice), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                res.status(200).json({ status: true, data: data })
+            }
+        })
+    },
 };
+
 
 
 

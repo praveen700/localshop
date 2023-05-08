@@ -7,5 +7,7 @@ module.exports = app => {
     router.post("/category/:id", product.createProduct);
     router.get("/category", product.fetchCateogeryWise);
     router.get("/all-category-all-products", product.landingPage);
+    router.get("/:categoryId/sort", product.sortPorducts);
+    router.get("/:categoryId/filter-by-price", product.filterProductsByPrice);
     app.use('/api/products', router);
   };

@@ -23,4 +23,4 @@ const getOrderOfByID =(customer_id) => {
     }
 }
 
-module.exports = {createOrder, getOrderQuery, getOrderCustomer, getOrderOfCustomerByID, getOrderOfByID}
+module.exports = {createOrder, getOrderQuery, getOrderCustomer, getOrderOfCustomerByID, getOrderOfByID};

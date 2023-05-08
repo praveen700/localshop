@@ -62,13 +62,13 @@ const deleteProducts =(product_id) => {
 const homePageQuery = (params) => {
     if(!params){
         return{
-            sql:`select p.product_id, p.name, p.description, p.price, p.image_url, c.name as productName from Products p join Categories c on p.category_id = c.category_id LIMIT 50`
+            sql:`select p.product_id, p.name, p.description, p.price, p.image_url, c.category_id, c.name as productName from Products p join Categories c on p.category_id = c.category_id LIMIT 50`
         }
     }else{
         return{
             sql:`SELECT *
             FROM (
-              SELECT p.product_id, p.name, p.description, p.price, p.image_url, c.category_id AS category_id2, c.name as productName
+              SELECT p.product_id, p.name, p.description, p.price, p.image_url, c.category_id, c.name as productName
               FROM Products p
               JOIN Categories c ON p.category_id = c.category_id
               LIMIT 50
@@ -81,6 +81,20 @@ const homePageQuery = (params) => {
     }
 }
 
+const sortProducts = (category_id, sortType) => {
+    return{
+        sql: `select * from Products where category_id = ? ORDER BY price ${sortType};`,
+        values: [category_id],
+    }
+}
+
+const priceSliderQuery = (category_id, minPrice, maxPrice) => {
+    return{
+        sql: `SELECT * FROM Products WHERE category_id = ? AND price BETWEEN ? AND ?`,
+        values: [category_id, minPrice, maxPrice]
+    }
+}
+
 module.exports = {
     fetchQuery,
     searchCount,
@@ -88,7 +102,9 @@ module.exports = {
     fetchProductsBasedOnCategory,
     updateProducts,
     deleteProducts,
-    homePageQuery
+    homePageQuery,
+    sortProducts,
+    priceSliderQuery
 }
 
 
