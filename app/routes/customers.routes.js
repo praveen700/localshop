@@ -4,7 +4,7 @@ module.exports = app => {
   const fetchCus = require("../controllers/customer.get")
 
   // Create a new cust
-  router.post("/", cust.create);
+  router.post("/", cust.createdCustomer);
   router.get("/", fetchCus.fetchCustomer);
   app.use('/api/customers', router);
 };

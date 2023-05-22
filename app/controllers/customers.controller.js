@@ -1,50 +1,65 @@
+
+
+const qu = require("../Querys/customer.query");
 const sql = require("../models/db");
-const Customers = require("../models/customers.model.js");
 
-// Create and Save a new Tutorial
-exports.create = (req, res) => {
-  const cust = new Customers({
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    shipping_address:req.body.shipping_address,
-    billing_address: req.body.billing_address
-  });
-  if (!req.body) {
-    res.status(405).send({
-      message: "Content can not be empty!"
+module.exports = {
+  createdCustomer: (req, res, next) => {
+    const phone = req.body.phone;
+    const name = req.body.name;
+    const email = req.body.email;
+    const shipping_address = req.body.shipping_address;
+    const billing_address = req.body.billing_address;
+  
+    if (!phone) {
+      return res.status(405).json({ message: "Mobile could not be empty!" });
+    }
+  
+    sql.query("SELECT * FROM Customers WHERE phone = ?", [phone], (err, data) => {
+      if (err) {
+        return res.status(403).json({ error: err.message });
+      }
+  
+      if (data?.length > 0) {
+        return res.status(200).json({ status: true, message: "User already registered with this number" });
+      }
+  
+      if (!name) {
+        return res.status(405).json({ message: "Name could not be empty" });
+      }
+      if (!email) {
+        return res.status(405).json({ message: "Email could not be empty" });
+      }
+      if (!shipping_address) {
+        return res.status(405).json({ message: "Shipping address could not be empty" });
+      }
+      if (!billing_address) {
+        return res.status(405).json({ message: "Billing address could not be empty" });
+      }
+      const customerData = {
+        name,
+        email,
+        phone,
+        shipping_address,
+        billing_address
+      };
+      sql.query(qu.postCustomer(customerData), (err, data) => {
+        if (err) {
+          return res.status(403).json({ error: err.message });
+        }
+  
+        return res.status(200).json({ status: true, data: "Customer created successfully" });
+      });
     });
-  }
-  // Create a Tutorial
-  if(!req.body.name){
-    res.status(405).json({message:"Name couid not be empty"})
-    return
-  }
-  if(!req.body.email){
-    res.status(405).json({message:"email couid not be empty"})
-    return
-  }
-  if(!req.body.phone){
-    res.status(405).json({message:"phone couid not be empty"})
-    return
-  }
-  if(!req.body.shipping_address){
-    res.status(405).json({message:"shipping_address couid not be empty"})
-    return
-  }
-  if(!req.body.billing_address){
-    res.status(405).json({message:"billing_address couid not be empty"})
-    return
-  }else{
-    Customers.create(cust, (err, data) => {
-      if (err)
-        res.status(500).json({
-          message:
-            err.message || "Some error occurred while creating the Tutorial."
-        });
-      else res.status(200).json({message: "successfully created customer", status: true});
-    });
-
-  }
+  },
 
 };
+
+
+
+
+
+
+
+// 
+

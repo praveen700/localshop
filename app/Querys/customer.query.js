@@ -28,9 +28,17 @@ const searchCount = (params) => {
 
     }
 }
+
+const postCustomer = (body) => {
+    return {
+        sql: "INSERT INTO Customers SET ?",
+        values: [body],
+    }
+}
 module.exports = {
     fetchQuery,
-    searchCount
+    searchCount,
+    postCustomer
 }
 
 

@@ -95,6 +95,15 @@ const priceSliderQuery = (category_id, minPrice, maxPrice) => {
     }
 }
 
+const getByPorductId = (product_id) => {
+    return{
+        sql: `SELECT * FROM Products WHERE product_id = ?`,
+        values: [product_id]
+    }
+}
+
+
+
 module.exports = {
     fetchQuery,
     searchCount,
@@ -104,7 +113,8 @@ module.exports = {
     deleteProducts,
     homePageQuery,
     sortProducts,
-    priceSliderQuery
+    priceSliderQuery,
+    getByPorductId
 }
 
 

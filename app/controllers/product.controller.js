@@ -92,6 +92,16 @@ module.exports = {
             }
         })
     },
+    fetchProductById:(req, res, next)=>{
+        sql.query(qu.getByPorductId(req.params.id), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                res.status(200).json({ status: true, data: data })
+            }
+        })
+
+    }
 };
 
 

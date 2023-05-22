@@ -55,6 +55,51 @@ module.exports = {
             }
         })
     },
+    // Order Items;
+    createOrderItems: (req, res, next) => {
+        sql.query(qu.createOrderItems(req.body), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                res.status(200).json({
+                    status: true, data: data, message : `Thank you for placing an order with us. Your order has been received`})
+            }
+        })
+
+    },
+    updateOrderItems: (req, res, next) => {
+        sql.query(qu.updateOrderItemsById(req.body, req.params.id), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                res.status(200).json({
+                    status: true, data: data, message : `Upadated Order Items`})
+            }
+        })
+
+    },
+    getOrderItemsByCustomerID:(req, res, next) => {
+        sql.query(qu.fecthCustomerOrderItems(req.params.id), (err, data) => {
+            if (err) {
+                res.status(403).json({ error: err.message });
+            } else {
+                if(data.length){
+                    sql.query(qu.fetchOrderItems(data[0].order_id), (err, orderItemsData) => {
+                        if (err) {
+                            res.status(403).json({ error: err.message });
+                        }else{
+                            data.forEach(obj => obj.orderItems = orderItemsData);
+                            res.status(200).json({status: true, data: data})
+                        }
+                      })
+                }else{
+                    res.status(200).json({status: true, message: "Your Cart is Empty!"})
+                }
+
+            }
+        })
+
+    },
 
 };
 
