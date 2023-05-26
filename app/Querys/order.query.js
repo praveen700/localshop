@@ -38,7 +38,7 @@ const getOrderOfByID =(customer_id) => {
 
 const fecthCustomerOrderItems= (customerId) =>{
     return {
-        sql: `select  c.name, c.email, c.billing_address, c.shipping_address, c.phone, O.status, O.order_date, O.order_id  from Customers c
+        sql: `select  c.name, c.email, c.billing_address, c.shipping_address, c.phone, O.status, O.order_date, O.order_id, c.customer_id  from Customers c
         join Orders O on c.customer_id = O.customer_id
         where c.customer_id = ?;`,
         values:[customerId]

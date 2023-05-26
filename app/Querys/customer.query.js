@@ -29,6 +29,25 @@ const searchCount = (params) => {
     }
 }
 
+const fetchCustById = (customerId) => {
+    return {
+        sql: `SELECT * FROM Customers WHERE customer_id = ?`,
+        values: [customerId],
+    }
+}
+const fetchCustByPhone = (phone) => {
+    return {
+        sql: `SELECT * FROM Customers WHERE phone = ?`,
+        values: [phone],
+    }
+}
+const loginUser = (phone) => {
+    return {
+        sql: `SELECT * FROM Customers WHERE phone = ? AND password = ?;`,
+        values: [phone, password],
+    }
+}
+
 const postCustomer = (body) => {
     return {
         sql: "INSERT INTO Customers SET ?",
@@ -38,7 +57,10 @@ const postCustomer = (body) => {
 module.exports = {
     fetchQuery,
     searchCount,
-    postCustomer
+    postCustomer,
+    fetchCustById,
+    loginUser,
+    fetchCustByPhone
 }
 
 

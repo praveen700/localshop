@@ -88,8 +88,12 @@ module.exports = {
                         if (err) {
                             res.status(403).json({ error: err.message });
                         }else{
-                            data.forEach(obj => obj.orderItems = orderItemsData);
-                            res.status(200).json({status: true, data: data})
+                            data.forEach(obj => obj.orderDetails = orderItemsData);
+                            let total;
+                            for(let totalPrice of orderItemsData){
+                                total = totalPrice.price * totalPrice.quantity
+                            }
+                            res.status(200).json({status: true, data: data, total: total})
                         }
                       })
                 }else{

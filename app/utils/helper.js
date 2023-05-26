@@ -1,13 +1,15 @@
+const bcrypt = require('bcrypt');
+
 function groupBy(arr, prop) {
-    const groupedObj = {};
-    for (const currentObj of arr) {
-      const key = currentObj[prop];
-      groupedObj[key] ??= [];
-      groupedObj[key].push(currentObj);
-    }
-    return groupedObj;
+  const groupedObj = {};
+  for (const currentObj of arr) {
+    const key = currentObj[prop];
+    groupedObj[key] ??= [];
+    groupedObj[key].push(currentObj);
   }
-  
-  module.exports = {
-    groupBy,
+  return groupedObj;
+}
+
+module.exports = {
+  groupBy,
 }
