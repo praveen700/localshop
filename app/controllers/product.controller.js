@@ -2,6 +2,8 @@ const { bannerUrl } = require("../../constants/constants");
 const sql = require("../models/db");
 const qu = require("../Querys/products.query");
 const { groupBy } = require("../utils/helper");
+
+
 module.exports = {
     fetchProduct:  (req, res, next) => {
          sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
@@ -15,6 +17,8 @@ module.exports = {
                     } else {
                         let total = JSON.parse(JSON.stringify(totalCount)).reduce((a) =>a.total_count)
                         res.status(200).json({ status: true, data: data, totalCount: total })
+                        // redisCLient.setEx("products", DEFAULT_EXPIRATION,  JSON.stringify(data))
+                      
                     }
                 })
             }

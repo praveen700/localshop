@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const Redis = require("redis");
+
 require('dotenv').config();
 
 const app = express();
@@ -27,6 +29,20 @@ require("./app/routes/order.router.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9000;
+// redis port
+const REDIS_PORT = process.env.REDIS_PORT;
+const redisCLient = Redis.createClient({ socket: { port: REDIS_PORT } });
+// Redis.createClient(REDIS_PORT);
+redisCLient.connect();
+
+redisCLient.on("connect",() => {
+  console.log(`Connected to Redis on port ${REDIS_PORT}.`);
+});
+
+redisCLient.on('error', function(err) {
+  console.error('Error:', err);
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
