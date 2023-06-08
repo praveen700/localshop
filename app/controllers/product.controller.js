@@ -2,27 +2,59 @@ const { bannerUrl } = require("../../constants/constants");
 const sql = require("../models/db");
 const qu = require("../Querys/products.query");
 const { groupBy } = require("../utils/helper");
-
+const Redis = require("redis");
+const redisCLient = Redis.createClient({ socket: { port: 6360 } });
+const DEFAULT_EXPIRATION = 3600;
+redisCLient.connect();
 
 module.exports = {
-    fetchProduct:  (req, res, next) => {
-         sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
-            if (err) {
-                res.status(403).json({ error: err.message });
-            } else {
-                let querys =  qu.fetchQuery(req.query.search, req.query.page, req.query.pageSize);
-                 sql.query(querys, function (err, data) {
-                    if (err) {
-                        res.status(403).json({ error: err.message });
-                    } else {
-                        let total = JSON.parse(JSON.stringify(totalCount)).reduce((a) =>a.total_count)
-                        res.status(200).json({ status: true, data: data, totalCount: total })
-                        // redisCLient.setEx("products", DEFAULT_EXPIRATION,  JSON.stringify(data))
+    fetchProduct:  async(req, res, next) => {
+        const productList = await redisCLient.get(`products?page=${req.query.page}&pageSize=${req.query.pageSize}&search=${req.query.search}`);
+        if (productList !==null) {
+          res.status(200).json(JSON.parse(productList))
+        } else {
+          try {
+            sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
+                if (err) {
+                    res.status(403).json({ error: err.message });
+                } else {
+                    let querys =  qu.fetchQuery(req.query.search, req.query.page, req.query.pageSize);
+                     sql.query(querys, function (err, data) {
+                        if (err) {
+                            res.status(403).json({ error: err.message });
+                        } else {
+                            let total = JSON.parse(JSON.stringify(totalCount)).reduce((a) =>a.total_count)
+                            let product = { status: true, data: data, totalCount: total }
+                            res.status(200).json({ status: true, data: data, totalCount: total })
+                            redisCLient.setEx(`products?page=${req.query.page}&pageSize=${req.query.pageSize}&search=${req.query.search}`, DEFAULT_EXPIRATION, JSON.stringify(product));
+                          
+                        }
+                    })
+                }
+            })
+
+          } catch(error) {
+            res.status(403).json({ error: err.message });
+          }
+        }
+
+        //  sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
+        //     if (err) {
+        //         res.status(403).json({ error: err.message });
+        //     } else {
+        //         let querys =  qu.fetchQuery(req.query.search, req.query.page, req.query.pageSize);
+        //          sql.query(querys, function (err, data) {
+        //             if (err) {
+        //                 res.status(403).json({ error: err.message });
+        //             } else {
+        //                 let total = JSON.parse(JSON.stringify(totalCount)).reduce((a) =>a.total_count)
+        //                 res.status(200).json({ status: true, data: data, totalCount: total })
+        //                 // redisCLient.setEx("products", DEFAULT_EXPIRATION,  JSON.stringify(data))
                       
-                    }
-                })
-            }
-        })
+        //             }
+        //         })
+        //     }
+        // })
     },
     createProduct: (req, res, next) => {
          sql.query(qu.insertProducts(req.body), (err, data) => {
