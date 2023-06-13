@@ -54,13 +54,22 @@ const postCustomer = (body) => {
         values: [body],
     }
 }
+
+const updateCustomer = (body, customerId) => {
+    return{
+        sql: `UPDATE Customers
+        SET ? WHERE customer_id = ?;`,
+        values: [body, customerId],
+    }
+}
 module.exports = {
     fetchQuery,
     searchCount,
     postCustomer,
     fetchCustById,
     loginUser,
-    fetchCustByPhone
+    fetchCustByPhone,
+    updateCustomer
 }
 
 

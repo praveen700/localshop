@@ -7,6 +7,7 @@ module.exports = app => {
   router.post("/", cust.createdCustomer);
   router.get("/", fetchCus.fetchCustomer);
   router.get("/:id", fetchCus.fetchCustomerById);
+  router.put("/:id", fetchCus.updateUser);
   router.post("/login-user", fetchCus.loginUser);
   app.use('/api/customers', router);
 };

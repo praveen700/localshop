@@ -11,6 +11,7 @@ module.exports = {
     fetchProduct:  async(req, res, next) => {
         const productList = await redisCLient.get(`products?page=${req.query.page}&pageSize=${req.query.pageSize}&search=${req.query.search}`);
         if (productList !==null) {
+            console.log("inside cache")
           res.status(200).json(JSON.parse(productList))
         } else {
           try {
@@ -27,7 +28,6 @@ module.exports = {
                             let product = { status: true, data: data, totalCount: total }
                             res.status(200).json({ status: true, data: data, totalCount: total })
                             redisCLient.setEx(`products?page=${req.query.page}&pageSize=${req.query.pageSize}&search=${req.query.search}`, DEFAULT_EXPIRATION, JSON.stringify(product));
-                          
                         }
                     })
                 }
@@ -133,7 +133,10 @@ module.exports = {
             if (err) {
                 res.status(403).json({ error: err.message });
             } else {
-                res.status(200).json({ status: true, data: data })
+                const object = data.reduce((result, current) => {
+                    return Object.assign(result, current);
+                  }, {});
+                res.status(200).json({ status: true, data: object })
             }
         })
 
