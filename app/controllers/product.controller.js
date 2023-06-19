@@ -1,4 +1,5 @@
 const { bannerUrl } = require("../../constants/constants");
+const logger = require("../indexLogger");
 const sql = require("../models/db");
 const qu = require("../Querys/products.query");
 const { groupBy } = require("../utils/helper");
@@ -11,7 +12,6 @@ module.exports = {
     fetchProduct:  async(req, res, next) => {
         const productList = await redisCLient.get(`products?page=${req.query.page}&pageSize=${req.query.pageSize}&search=${req.query.search}`);
         if (productList !==null) {
-            console.log("inside cache")
           res.status(200).json(JSON.parse(productList))
         } else {
           try {
@@ -34,31 +34,15 @@ module.exports = {
             })
 
           } catch(error) {
+            logger.error(`GET ${req.originalUrl}`, err)
             res.status(403).json({ error: err.message });
           }
         }
-
-        //  sql.query(qu.searchCount(req.query.search), (err, totalCount) => {
-        //     if (err) {
-        //         res.status(403).json({ error: err.message });
-        //     } else {
-        //         let querys =  qu.fetchQuery(req.query.search, req.query.page, req.query.pageSize);
-        //          sql.query(querys, function (err, data) {
-        //             if (err) {
-        //                 res.status(403).json({ error: err.message });
-        //             } else {
-        //                 let total = JSON.parse(JSON.stringify(totalCount)).reduce((a) =>a.total_count)
-        //                 res.status(200).json({ status: true, data: data, totalCount: total })
-        //                 // redisCLient.setEx("products", DEFAULT_EXPIRATION,  JSON.stringify(data))
-                      
-        //             }
-        //         })
-        //     }
-        // })
     },
     createProduct: (req, res, next) => {
          sql.query(qu.insertProducts(req.body), (err, data) => {
             if (err) {
+                logger.error(`POST ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             }else{
                 res.status(200).json({ status: true, data: "Product Created Successfully" })
@@ -69,6 +53,7 @@ module.exports = {
     updateProducts: (req, res, next) => {
          sql.query(qu.updateProducts(req.body, req.params.id), (err, data) => {
             if (err) {
+                logger.error(`PUT ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             }else{
                 res.status(200).json({ status: true, data: "Product Updated Successfully" })
@@ -80,6 +65,7 @@ module.exports = {
         let query =  qu.fetchProductsBasedOnCategory(req.query.categoryType)
          sql.query(query, (err, data) => {
             if (err) {
+                logger.error(`GET ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             }else{
                 res.status(200).json({ status: true, data: data })
@@ -89,6 +75,7 @@ module.exports = {
     delteProductByID: (req, res, next) => {
          sql.query(qu.deleteProducts(req.params.id), (err, data) => {
             if (err) {
+                logger.error(`DELETE ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             }else{
                 res.status(200).json({ status: true, data: "Product Deleted Successfully" })
@@ -99,6 +86,7 @@ module.exports = {
     landingPage: (req, res, next)=>{
          sql.query(qu.homePageQuery(req.query.search), (err, data) => {
             if (err) {
+                logger.error(`GET ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             }else{
                 let groupedObject = groupBy(data, "productName")
@@ -113,6 +101,7 @@ module.exports = {
     sortPorducts :  (req, res, next) => {
         sql.query(qu.sortProducts(req.params.categoryId, req.query.sortType), (err, data) => {
             if (err) {
+                logger.error(`GET ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             } else {
                 res.status(200).json({ status: true, data: data })
@@ -122,6 +111,7 @@ module.exports = {
     filterProductsByPrice :(req, res, next) => {
         sql.query(qu.priceSliderQuery(req.params.categoryId, req.query.minPrice, req.query.maxPrice), (err, data) => {
             if (err) {
+                logger.error(`GET ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             } else {
                 res.status(200).json({ status: true, data: data })
@@ -131,6 +121,7 @@ module.exports = {
     fetchProductById:(req, res, next)=>{
         sql.query(qu.getByPorductId(req.params.id), (err, data) => {
             if (err) {
+                logger.error(`GET By ID ${req.originalUrl}`, err)
                 res.status(403).json({ error: err.message });
             } else {
                 const object = data.reduce((result, current) => {

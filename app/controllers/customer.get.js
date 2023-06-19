@@ -54,8 +54,8 @@ module.exports = {
           }
         });
       } catch (error) {
+        logger.info(`GET ${req.originalUrl}`, err)
         res.status(403).json({ error: err.message });
-        logger.info(`GET /api/customers/${req.params.id}`, err.message)
       }
     }
   },
@@ -77,6 +77,7 @@ module.exports = {
         return res.status(401).json({ error: 'Invalid username or password', status: false });
       }
     } catch (err) {
+      logger.info(`POST ${req.originalUrl}`, err)
       res.status(401).json({ error: "Invalid username or password", status: false, });
     }
   },
@@ -97,6 +98,7 @@ module.exports = {
         message: "Customer Address update Successfully",
       });
     } catch (error) {
+      logger.info(`PUT ${req.originalUrl}`, err)
       res.status(403).json({ error: error.message });
     }
   }

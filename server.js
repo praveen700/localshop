@@ -10,13 +10,22 @@ var corsOptions = {
   origin: "*"
 };
 
+app.use((req, res, next) => {
+    logger.info(req.body)
+    let oldSend = res.send;
+    res.send = function (data) {
+      logger.info(data)
+      oldSend.apply(res, arguments)
+    }
+    next();
+})
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json()); /* bodyParser.json() is deprecated */
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true })); /* bodyParser.urlencoded() is deprecated */
+app.use(express.urlencoded({ extended: true })); 
 
 // simple route
 app.get("/", (req, res) => {
@@ -34,11 +43,11 @@ const redisCLient = Redis.createClient({ socket: { port: REDIS_PORT } });
 // Redis.createClient(REDIS_PORT);
 redisCLient.connect();
 
-redisCLient.on("connect",() => {
+redisCLient.on("connect", () => {
   logger.info(`Connected to Redis on port ${REDIS_PORT}.`);
 });
 
-redisCLient.on('error', function(err) {
+redisCLient.on('error', function (err) {
   console.error('Error:', err);
 });
 
